@@ -6,6 +6,8 @@ from dpl.libs.gpio_chooser import GPIO as GPIO
 
 from dpl.libs.abs_shift_reg import AbsShiftRegister
 
+logger = logging.getLogger(__name__)
+
 DELAY = 0.0
 
 
@@ -40,7 +42,7 @@ class ShiftRegGPIO(AbsShiftRegister):
 
             except:  # В случае ошибки...
                 if i != 0:  # ...если хоть один пин уже установлен...
-                    logging.debug('Failed port setup. Cleaning up: %s', self.ports[0:i])
+                    logger.debug('Failed port setup. Cleaning up: %s', self.ports[0:i])
                     GPIO.cleanup(self.ports[0:i])  # ...очищаем все установленные порты...
 
                 raise  # ...пробрасываем ошибку во внешний мир
@@ -60,7 +62,7 @@ class ShiftRegGPIO(AbsShiftRegister):
         # Контроль успешности выполнения конструктора. Зачем он нужен: http://bit.ly/2blHSL2
         self.__construction_finished = False
 
-        logging.debug("%s init started", self)
+        logger.debug("%s init started", self)
 
         if not isinstance(num_of_slaves, int):
             raise ValueError('num_of_slaves must be an integer')
@@ -77,7 +79,7 @@ class ShiftRegGPIO(AbsShiftRegister):
         # Устанавливаем все порты
         self.__setup_ports()
 
-        logging.debug("%s init finished", self)
+        logger.debug("%s init finished", self)
 
         self.__construction_finished = True
 
@@ -88,7 +90,7 @@ class ShiftRegGPIO(AbsShiftRegister):
         Деструктор объекта: освобождение занятых ресурсов
         :return:
         """
-        logging.debug("%s destruction started", self)
+        logger.debug("%s destruction started", self)
 
         if self.__construction_finished:  # Если конструктор был выполнен успешно...
             self.clear()          # Очищаем содержимое регистра
@@ -100,7 +102,7 @@ class ShiftRegGPIO(AbsShiftRegister):
             # Освобождаем все занятые порты
             GPIO.cleanup(self.ports)
 
-        logging.debug("%s destruction finished", self)
+        logger.debug("%s destruction finished", self)
         return
 
     def get_capacity(self):
