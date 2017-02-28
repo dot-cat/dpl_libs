@@ -3,7 +3,7 @@ import threading
 
 from dpl.libs.abs_shift_reg import AbsShiftRegister
 
-LOGGER = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
 class ShiftRegBuffered(AbsShiftRegister):
@@ -68,12 +68,12 @@ class ShiftRegBuffered(AbsShiftRegister):
         Записать текущее содержимое буфера в регистр
         :return: none
         """
-        LOGGER.debug("%s: write planned. Data: %s", self, bin(self.buffer))
+        logger.debug("%s: write planned. Data: %s", self, bin(self.buffer))
 
         with self.lock_write:  # Блокируем запись из других потоков
             self.shift_reg.write_data(self.buffer)
 
-        LOGGER.debug("%s: write finished", self)
+        logger.debug("%s: write finished", self)
 
     def get_buffer(self):
         """
